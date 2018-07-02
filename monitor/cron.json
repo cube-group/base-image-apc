@@ -1,0 +1,18 @@
+{
+  "hook": "",
+  "post": 1,
+  "list": [
+    {
+      "time": "* * * * *",
+      "value": "echo adsfa",
+      "user": "linyang",
+      "group": "linyang"
+    },
+    {
+      "time": "* * * * *",
+      "value": "echoxxxx",
+      "user": "linyang",
+      "group": "linyang"
+    }
+  ]
+}
