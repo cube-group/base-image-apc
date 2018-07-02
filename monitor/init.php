@@ -28,6 +28,8 @@ class InitMonitor
     {
         error_reporting('E_ALL & ~E_NOTICE');
 
+        echo "=========== InitMonitor ===========\n";
+
         if ($appName = getenv('APP_NAME')) {
             $this->appName = $appName;
         }
@@ -41,9 +43,9 @@ class InitMonitor
 
         //app init shell
         if (!$appInitShell = getenv('APP_INIT_SHELL')) {
-            exit("not env APP_INIT_SHELL");
+            exit("[ERROR] not env APP_INIT_SHELL");
         }
-        echo "APP_INIT_SHELL {$appInitShell}\n";
+        echo "[INIT] APP_INIT_SHELL: {$appInitShell}\n";
 
         //exec
         system("{$appInitShell} >> /cli-init-shell.log 2>&1");
@@ -67,7 +69,7 @@ class InitMonitor
             $d = new LDing($this->ding);
             $d->send("[{$this->appName}][{$this->serverIp()}] {$msg}");
         } else {
-            echo "can't find env APP_MONITOR_HOOK, can't send ding.\n";
+            echo "[WARN] can't find env APP_MONITOR_HOOK, can't send ding.\n";
         }
     }
 }

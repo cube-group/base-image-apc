@@ -33,6 +33,8 @@ class CronTabMonitor
     {
         error_reporting('E_ALL & ~E_NOTICE');
 
+        echo "=========== CronTabMonitor ===========\n";
+
         if ($appName = getenv('APP_NAME')) {
             $this->appName = $appName;
         }
@@ -51,13 +53,13 @@ class CronTabMonitor
 
         if (!$cronContent = FileUtil::read($this->appPath . '/cron.json')) {
             $this->sendDing("can't find \$APP_PATH/cron.json");
-            exit("can't find \$APP_PATH/cron.json\n");
+            exit("[ERROR] can't find \$APP_PATH/cron.json\n");
         }
         echo "[CRON] cronContent: read success\n";
 
         if (!$cronJson = @json_decode($cronContent)) {
             $this->sendDing("can't json decode \$APP_PATH/cron.json");
-            exit("can't json decode \$APP_PATH/cron.json\n");
+            exit("[ERROR] can't json decode \$APP_PATH/cron.json\n");
         }
         echo "[CRON] cronJson: decode success\n";
 
@@ -121,7 +123,7 @@ class CronTabMonitor
             $d = new LDing($this->ding);
             $d->send("[{$this->appName}][{$this->serverIp()}] {$msg}");
         } else {
-            echo "can't find env APP_MONITOR_HOOK, can't send ding.\n";
+            echo "[WARN] can't find env APP_MONITOR_HOOK, can't send ding.\n";
         }
     }
 }
