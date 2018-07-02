@@ -39,26 +39,14 @@ class InitMonitor
         }
         echo "[INIT] ding: {$this->ding}\n";
 
-        //app path
-        if (!$appPath = realpath(getenv('APP_PATH'))) {
-            exit("can't find env APP_INIT_SHELL\n");
-        }
-        echo "[INIT] appPath: {$appPath}\n";
-
         //app init shell
         if (!$appInitShell = getenv('APP_INIT_SHELL')) {
-            exit();
+            exit("not env APP_INIT_SHELL");
         }
         echo "APP_INIT_SHELL {$appInitShell}\n";
 
-        //file path
-        $appInitShell = $appPath . '/' . $appInitShell;
-        if (!is_file($appInitShell)) {
-            exit();
-        }
-
         //exec
-        system("sh {$appInitShell} >> /cli-init-shell.log 2>&1");
+        system("{$appInitShell} >> /cli-init-shell.log 2>&1");
         if ($content = system("cat /cli-init-shell.log")) {
             $this->sendDing("[INIT-SHELL] {$appInitShell}\n{$content}\n");
         }
