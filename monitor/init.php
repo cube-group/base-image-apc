@@ -49,7 +49,9 @@ class InitMonitor
 
         //exec
         exec("{$appInitShell} >> /cli-init-shell.log 2>&1");
-        if ($content = system("cat /cli-init-shell.log")) {
+        system("cat /cli-init-shell.log",$content);
+        if ($content) {
+            $content = join("\n",$content);
             $this->sendDing("[INIT-SHELL] {$appInitShell}\n{$content}\n");
         }
     }
