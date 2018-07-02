@@ -50,16 +50,14 @@ class CronTabMonitor
         echo "[CRON] appPath: {$this->appPath}\n";
 
         if (!$cronContent = FileUtil::read($this->appPath . '/cron.json')) {
-            echo "can't find APP_PATH/cron.json\n";
-            $this->sendDing("can't find APP_PATH/cron.json");
-            exit();
+            $this->sendDing("can't find \$APP_PATH/cron.json");
+            exit("can't find \$APP_PATH/cron.json\n");
         }
         echo "[CRON] cronContent: read success\n";
 
         if (!$cronJson = @json_decode($cronContent)) {
-            echo "can't json decode APP_PATH/cron.json\n";
-            $this->sendDing("can't json decode APP_PATH/cron.json");
-            exit();
+            $this->sendDing("can't json decode \$APP_PATH/cron.json");
+            exit("can't json decode \$APP_PATH/cron.json\n");
         }
         echo "[CRON] cronJson: decode success\n";
 

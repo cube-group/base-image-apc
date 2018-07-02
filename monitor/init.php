@@ -72,4 +72,4 @@ class InitMonitor
     }
 }
 
-new CronTabMonitor();
+new InitMonitor();
