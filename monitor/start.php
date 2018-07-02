@@ -17,18 +17,30 @@ require __DIR__ . '/vendor/autoload.php';
  */
 class CronTabMonitor
 {
+    /**
+     * app name
+     * @var string
+     */
     private $appName = 'apc';
-    private $outLog = '/tmp/php_crontab.log';
-    private $errLog = '/tmp/php_crontab.err';
-    private $ding = 'https://oapi.dingtalk.com/robot/send?access_token=86a6a6c2f0fde8811412b39739bed47155e88982ac6ddc203ddc43e9cb920287';
-    private $appPath = '/Users/linyang/Workspace/GITHUB/base-image-apc';
-
+    /**
+     * ding ding web hook url
+     * @var mixed|null|string
+     */
+    private $ding = '';
+    /**
+     * app path
+     * @var string
+     */
+    private $appPath = '';
     /**
      * 是否通过钉钉进行日志收集
      * @var bool
      */
     private $postOut = false;
 
+    /**
+     * CronTabMonitor constructor.
+     */
     public function __construct()
     {
         error_reporting('E_ALL & ~E_NOTICE');
