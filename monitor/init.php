@@ -19,8 +19,11 @@ require __DIR__ . '/vendor/autoload.php';
 class InitMonitor
 {
     private $appName = 'apc';
-    private $ding = 'https://oapi.dingtalk.com/robot/send?access_token=86a6a6c2f0fde8811412b39739bed47155e88982ac6ddc203ddc43e9cb920287';
+    private $ding = '';
 
+    /**
+     * InitMonitor constructor.
+     */
     public function __construct()
     {
         error_reporting('E_ALL & ~E_NOTICE');
@@ -36,13 +39,26 @@ class InitMonitor
         }
         echo "[INIT] ding: {$this->ding}\n";
 
+        //app path
+        if (!$appPath = realpath(getenv('APP_PATH'))) {
+            exit("can't find env APP_INIT_SHELL\n");
+        }
+        echo "[INIT] appPath: {$appPath}\n";
+
+        //app init shell
         if (!$appInitShell = getenv('APP_INIT_SHELL')) {
-            echo "can't find env APP_INIT_SHELL\n";
             exit();
         }
         echo "APP_INIT_SHELL {$appInitShell}\n";
 
-        system("{$appInitShell} >> /cli-init-shell.log 2>&1");
+        //file path
+        $appInitShell = $appPath . '/' . $appInitShell;
+        if (!is_file($appInitShell)) {
+            exit();
+        }
+
+        //exec
+        system("sh {$appInitShell} >> /cli-init-shell.log 2>&1");
         if ($content = system("cat /cli-init-shell.log")) {
             $this->sendDing("[INIT-SHELL] {$appInitShell}\n{$content}\n");
         }

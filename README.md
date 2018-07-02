@@ -102,5 +102,5 @@ Zend OPcache
 * APP_NAME: app名称
 * APP_PATH: 项目所在目录(默认为:/var/www/html)
 * APP_MONITOR_HOOK: app报警钉钉群机器人webhook
-* APP_INIT_SHELL: 初始化执行脚本(整个Docker生命周期只执行一次)
+* APP_INIT_SHELL: 初始化执行脚本文件sh $APP_PATH/$APP_INIT_SHELL
 * PHP_MEM_LIMIT: php进程内存限制,默认512M
