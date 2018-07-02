@@ -64,8 +64,8 @@ class CronTabMonitor
         echo "[CRON] appPath: {$this->appPath}\n";
 
         if (!$cronContent = FileUtil::read($this->appPath . '/cron.json')) {
-            $this->sendDing("can't find \$APP_PATH/cron.json");
-            exit("[ERROR] can't find \$APP_PATH/cron.json\n");
+            $this->sendDing("\$APP_PATH/cron.json is nil.");
+            exit("[ERROR] \$APP_PATH/cron.json is nil.\n");
         }
         echo "[CRON] cronContent: read success\n";
 
@@ -81,7 +81,7 @@ class CronTabMonitor
         }
 
         $cronList = array();
-        system("crontab -l > /tmp/crontab.bak");
+        exec("crontab -l > /tmp/crontab.bak");
         if ($list = Arrays::get($cronJson, 'jobs', array())) {
             foreach ($list as $key => $item) {
                 if (!$time = Arrays::get($item, 'time')) {
@@ -93,11 +93,11 @@ class CronTabMonitor
                 $md5OutFile = "/tmp-php-cron-" . md5($time . $value) . ".log";
                 $md5ErrFile = "/tmp-php-cron-" . md5($time . $value) . ".err";
                 $cronItem = array('err' => $md5ErrFile, 'out' => $md5OutFile, 'time' => $time, 'value' => $value);
-                system("touch {$md5OutFile} {$md5ErrFile}");
-                system("echo \"{$time} {$value} >> {$md5OutFile} 2>> {$md5ErrFile}\" >> /tmp/crontab.bak");
+                exec("touch {$md5OutFile} {$md5ErrFile}");
+                exec("echo \"{$time} {$value} >> {$md5OutFile} 2>> {$md5ErrFile}\" >> /tmp/crontab.bak");
                 $cronList[] = $cronItem;
             }
-            system("crontab /tmp/crontab.bak");
+            exec("crontab /tmp/crontab.bak");
         }
 
         //日志收集
@@ -107,13 +107,13 @@ class CronTabMonitor
                 if ($err = system("cat {$cron['err']} && true > {$cron['err']}")) {
                     $this->sendDing("[CRON-ERR] {$cron['time']} {$cron['value']} {$err}");
                 }
-                system("cat {$cron['out']} >> {$outFile} && true > {$cron['out']}");
+                exec("cat {$cron['out']} >> {$outFile} && true > {$cron['out']}");
             }
 
             if ($this->postOut) {
                 $this->sendDing(system("cat {$outFile} && true > {$outFile}"));
             } else {
-                system("true > {$outFile}");
+                exec("true > {$outFile}");
             }
 
             sleep(30);
@@ -134,8 +134,6 @@ class CronTabMonitor
         if ($this->ding) {
             $d = new LDing($this->ding);
             $d->send("[{$this->appName}][{$this->serverIp()}] {$msg}");
-        } else {
-            echo "[WARN] can't find env APP_MONITOR_HOOK, can't send ding.\n";
         }
     }
 }
