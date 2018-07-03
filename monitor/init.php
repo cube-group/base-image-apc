@@ -51,7 +51,7 @@ class InitMonitor
         exec("{$appInitShell} >> /init-shell.out 2>> /init-shell.err");
         $out = system("cat /init-shell.out && true > /init-shell.out");
         $err = system("cat /init-shell.err && true > /init-shell.err");
-        $this->sendDing("[INIT-SHELL]\n{$appInitShell}\n{$out}\n{$err}");
+        $this->sendDing("[INIT-SHELL]\n{$appInitShell}\n[OUT]\n{$out}\n[ERR]\n{$err}");
     }
 
     /**

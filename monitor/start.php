@@ -105,7 +105,7 @@ class CronTabMonitor
         while (true) {
             foreach ($cronList as $cron) {
                 if ($err = system("cat {$cron['err']} && true > {$cron['err']}")) {
-                    $this->sendDing("[TIME]\n{$cron['time']}\n[VALUE]\n{$cron['value']}\n[ERR]{$err}");
+                    $this->sendDing("[TIME]\n{$cron['time']}\n[VALUE]\n{$cron['value']}\n[ERR]\n{$err}");
                 }
                 exec("cat {$cron['out']} >> {$outFile} && true > {$cron['out']}");
             }
