@@ -105,14 +105,14 @@ class CronTabMonitor
         while (true) {
             foreach ($cronList as $cron) {
                 if ($err = system("cat {$cron['err']} && true > {$cron['err']}")) {
-                    $this->sendDing("[CRON-ERR] {$cron['time']} {$cron['value']} {$err}");
+                    $this->sendDing("[ERR]\n[TIME]\n{$cron['time']}\n[VALUE]\n{$cron['value']}\n{$err}");
                 }
                 exec("cat {$cron['out']} >> {$outFile} && true > {$cron['out']}");
             }
 
             if ($this->postOut) {
                 if ($out = system("cat {$outFile} && true > {$outFile}"))
-                    $this->sendDing($out);
+                    $this->sendDing("[OUT]\n{$out}");
             } else {
                 exec("true > {$outFile}");
             }
