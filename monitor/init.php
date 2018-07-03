@@ -43,7 +43,7 @@ class InitMonitor
 
         //app init shell
         if (!$appInitShell = getenv('APP_INIT_SHELL')) {
-            exit("[ERROR] not env APP_INIT_SHELL");
+            exit("[INIT] no env APP_INIT_SHELL\n");
         }
         echo "[INIT] APP_INIT_SHELL: {$appInitShell}\n";
 
@@ -60,7 +60,6 @@ class InitMonitor
      */
     private function serverIp()
     {
-//        return $_SERVER['REMOTE_ADDR'] . '-' . gethostbyname(exec('hostname'));
         return gethostbyname(exec('hostname'));
     }
 
