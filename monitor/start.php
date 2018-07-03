@@ -75,7 +75,7 @@ class CronTabMonitor
         }
         echo "[CRON] cronJson: decode success\n";
 
-        $this->postOut = Arrays::get($cronJson, 'postOut', false);
+        $this->postOut = Arrays::get($cronJson, 'post', false);
         if ($newDing = Arrays::get($cronJson, 'hook')) {
             $this->ding = $newDing;
         }
