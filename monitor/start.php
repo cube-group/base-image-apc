@@ -134,7 +134,7 @@ class CronTabMonitor
     {
         if ($this->ding) {
             $d = new LDing($this->ding);
-            $d->send("[{$this->appName}][{$this->serverIp()}] {$msg}");
+            $d->send("[CRON-APC]\n[{$this->appName}]\n[{$this->serverIp()}]\n{$msg}\n");
         }
     }
 }
