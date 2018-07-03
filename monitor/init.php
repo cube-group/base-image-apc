@@ -48,9 +48,10 @@ class InitMonitor
         echo "[INIT] APP_INIT_SHELL: {$appInitShell}\n";
 
         //exec
-        if ($out = system("{$appInitShell}")) {
-            $this->sendDing("[INIT-SHELL] {$appInitShell}\n{$out}\n");
-        }
+        exec("{$appInitShell} >> /init-shell.out 2>> /init-shell.err");
+        $out = system("cat /init-shell.out && treu > /init-shell.out");
+        $err = system("cat /init-shell.err && true > /init-shell.err");
+        $this->sendDing("[INIT-SHELL] {$appInitShell}\n{$out}\n{$err}");
     }
 
     /**
