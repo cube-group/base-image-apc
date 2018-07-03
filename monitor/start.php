@@ -105,7 +105,7 @@ class CronTabMonitor
         while (true) {
             foreach ($cronList as $cron) {
                 if ($err = system("cat {$cron['err']} && true > {$cron['err']}")) {
-                    $this->sendDing("[ERR]\n[TIME]\n{$cron['time']}\n[VALUE]\n{$cron['value']}\n{$err}");
+                    $this->sendDing("[TIME]\n{$cron['time']}\n[VALUE]\n{$cron['value']}\n[ERR]{$err}");
                 }
                 exec("cat {$cron['out']} >> {$outFile} && true > {$cron['out']}");
             }
@@ -127,14 +127,14 @@ class CronTabMonitor
      */
     private function serverIp()
     {
-        return $_SERVER['REMOTE_ADDR'] . '-' . gethostbyname(exec('hostname'));
+        return gethostbyname(exec('hostname'));
     }
 
     private function sendDing($msg)
     {
         if ($this->ding) {
             $d = new LDing($this->ding);
-            $d->send("[CRON-APC]\n[{$this->appName}]\n[{$this->serverIp()}]\n{$msg}\n");
+            $d->send("[CRON-APC]\n[APP_NAME] {$this->appName}\n[NODE_IP] {$this->serverIp()}\n{$msg}\n");
         }
     }
 }

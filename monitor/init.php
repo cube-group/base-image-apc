@@ -60,14 +60,15 @@ class InitMonitor
      */
     private function serverIp()
     {
-        return $_SERVER['REMOTE_ADDR'] . '-' . gethostbyname(exec('hostname'));
+//        return $_SERVER['REMOTE_ADDR'] . '-' . gethostbyname(exec('hostname'));
+        return gethostbyname(exec('hostname'));
     }
 
     private function sendDing($msg)
     {
         if ($this->ding) {
             $d = new LDing($this->ding);
-            $d->send("[INIT-APC]\n[{$this->appName}]\n[{$this->serverIp()}]\n{$msg}\n");
+            $d->send("[INIT-APC]\n[APP_NAME] {$this->appName}\n[NODE_IP] {$this->serverIp()}\n{$msg}\n");
         }
     }
 }
