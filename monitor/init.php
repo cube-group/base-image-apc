@@ -48,11 +48,8 @@ class InitMonitor
         echo "[INIT] APP_INIT_SHELL: {$appInitShell}\n";
 
         //exec
-        exec("{$appInitShell} >> /cli-init-shell.log 2>&1");
-        exec("cat /cli-init-shell.log", $content);
-        if ($content) {
-            $content = join("\n", $content);
-            $this->sendDing("[INIT-SHELL] {$appInitShell}\n{$content}\n");
+        if ($out = system("{$appInitShell}")) {
+            $this->sendDing("[INIT-SHELL] {$appInitShell}\n{$out}\n");
         }
     }
 

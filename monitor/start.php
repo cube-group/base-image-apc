@@ -97,7 +97,7 @@ class CronTabMonitor
                 exec("echo \"{$time} {$value} >> {$md5OutFile} 2>> {$md5ErrFile}\" >> /tmp/crontab.bak");
                 $cronList[] = $cronItem;
             }
-            exec("crontab /tmp/crontab.bak");
+            exec("crontab /tmp/crontab.bak && crond &");
         }
 
         //日志收集
@@ -111,7 +111,8 @@ class CronTabMonitor
             }
 
             if ($this->postOut) {
-                $this->sendDing(system("cat {$outFile} && true > {$outFile}"));
+                if ($out = system("cat {$outFile} && true > {$outFile}"))
+                    $this->sendDing($out);
             } else {
                 exec("true > {$outFile}");
             }
