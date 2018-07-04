@@ -90,7 +90,7 @@ class CronTabMonitor
                 if (!$value = Arrays::get($item, 'value')) {
                     continue;
                 }
-                $md5OutFile = "/tmp-php-cron-" . md5($time . $value) . ".log";
+                $md5OutFile = "/tmp-php-cron-" . md5($time . $value) . ".out";
                 $md5ErrFile = "/tmp-php-cron-" . md5($time . $value) . ".err";
                 $cronItem = array('err' => $md5ErrFile, 'out' => $md5OutFile, 'time' => $time, 'value' => $value);
                 exec("touch {$md5OutFile} {$md5ErrFile}");
@@ -101,23 +101,22 @@ class CronTabMonitor
         }
 
         //日志收集
-        $outFile = '/cli-cron-out.log';
         while (true) {
             foreach ($cronList as $cron) {
                 if ($err = system("cat {$cron['err']} && true > {$cron['err']}")) {
                     $this->sendDing("[TIME]\n{$cron['time']}\n[VALUE]\n{$cron['value']}\n[ERR]\n{$err}");
                 }
-                exec("cat {$cron['out']} >> {$outFile} && true > {$cron['out']}");
-            }
 
-            if ($this->postOut) {
-                if ($out = system("cat {$outFile} && true > {$outFile}"))
-                    $this->sendDing("[OUT]\n{$out}");
-            } else {
-                exec("true > {$outFile}");
-            }
+                if ($this->postOut) {
+                    if ($out = system("cat {$cron['out']} && true > {$cron['out']}")) {
+                        $this->sendDing("[OUT]\n{$out}");
+                    }
+                } else {
+                    exec("true > {$cron['out']}");
+                }
 
-            sleep(30);
+                sleep(30);
+            }
         }
     }
 
