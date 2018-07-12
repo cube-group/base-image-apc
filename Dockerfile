@@ -62,6 +62,8 @@ RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
     && echo 'extension=amqp.so' >> /usr/local/etc/php/conf.d/docker-php-ext-amqp.ini \
     # extensions install
     && pecl install redis && \
+    echo '[redis]' >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini && \
+    echo 'extension=redis.so' >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini && \
     echo 'opcache.validate_timestamps=0' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo 'opcache.enable=1' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo 'opcache.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
