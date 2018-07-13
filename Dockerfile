@@ -48,7 +48,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
     --with-freetype-dir=/usr/include/ \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-install iconv pdo_mysql pdo_pgsql gd exif intl xsl soap zip opcache && \
+    docker-php-ext-install iconv pdo_mysql pdo_pgsql gd exif intl xsl soap zip opcache bcmath && \
     docker-php-source delete && \
     apk add libmemcached-libs libmemcached-dev zlib-dev \
     && pecl install igbinary \
@@ -62,6 +62,8 @@ RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
     && echo 'extension=amqp.so' >> /usr/local/etc/php/conf.d/docker-php-ext-amqp.ini \
     # extensions install
     && pecl install redis && \
+    echo '[redis]' >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini && \
+    echo 'extension=redis.so' >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini && \
     echo 'opcache.validate_timestamps=0' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo 'opcache.enable=1' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo 'opcache.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
