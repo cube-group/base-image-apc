@@ -92,7 +92,7 @@ class CronTabMonitor
                 }
                 $md5OutFile = "/tmp-php-cron-" . md5($time . $value) . ".out";
                 $md5ErrFile = "/tmp-php-cron-" . md5($time . $value) . ".err";
-                $md5Lock = "/tmp-php-cron-" . md5($value) . ".locl";
+                $md5Lock = "/tmp-php-cron-" . md5($value) . ".lock";
                 $cronItem = array(
                     'lock' => $md5Lock,
                     'err' => $md5ErrFile,
