@@ -101,7 +101,7 @@ class CronTabMonitor
                     'value' => $value)
                 ;
                 exec("touch {$md5OutFile} {$md5ErrFile}");
-                exec("echo \"{$time} flock -xn {$md5Lock} -c '{$value}' >> {$md5OutFile} 2>> {$md5ErrFile}\" >> /tmp/crontab.bak");
+                exec("echo \"{$time} flock -xn {$md5Lock} -c '{$value} >> {$md5OutFile} 2>> {$md5ErrFile}' \" >> /tmp/crontab.bak");
                 $cronList[] = $cronItem;
             }
             exec("crontab /tmp/crontab.bak && crond &");
