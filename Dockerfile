@@ -15,8 +15,8 @@ ENV PHP_POST_MAX_SIZE 100M
 
 # 备份原始文件
 # 修改为国内镜像源
-RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
-    echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories && \
+RUN echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories && \
+    echo "http://mirrors.aliyun.com/alpine/v3.7/community/" >> /etc/apk/repositories && \
     apk update && \
     apk add --no-cache \
     tzdata \
