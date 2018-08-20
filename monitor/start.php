@@ -92,9 +92,16 @@ class CronTabMonitor
                 }
                 $md5OutFile = "/tmp-php-cron-" . md5($time . $value) . ".out";
                 $md5ErrFile = "/tmp-php-cron-" . md5($time . $value) . ".err";
-                $cronItem = array('err' => $md5ErrFile, 'out' => $md5OutFile, 'time' => $time, 'value' => $value);
+                $md5Lock = "/tmp-php-cron-" . md5($value) . ".lock";
+                $cronItem = array(
+                    'lock' => $md5Lock,
+                    'err' => $md5ErrFile,
+                    'out' => $md5OutFile,
+                    'time' => $time,
+                    'value' => $value)
+                ;
                 exec("touch {$md5OutFile} {$md5ErrFile}");
-                exec("echo \"{$time} {$value} >> {$md5OutFile} 2>> {$md5ErrFile}\" >> /tmp/crontab.bak");
+                exec("echo \"{$time} flock -xn {$md5Lock} -c '{$value} >> {$md5OutFile} 2>> {$md5ErrFile}' \" >> /tmp/crontab.bak");
                 $cronList[] = $cronItem;
             }
             exec("crontab /tmp/crontab.bak && crond &");

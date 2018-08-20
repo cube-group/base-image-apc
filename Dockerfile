@@ -1,6 +1,6 @@
-FROM php:7.2-cli-alpine3.7
-#alpine-3.7
-#php-cli-7.2.14
+FROM alpine:3.8
+#alpine3.8
+#php7.2.8
 
 MAINTAINER lin2798003 development "lin2798003@sina.com"
 
@@ -13,93 +13,52 @@ ENV APP_PATH /var/www/html
 ENV PHP_MEM_LIMIT 512M
 ENV PHP_POST_MAX_SIZE 100M
 
+ENV php_ini /etc/php7/php.ini
+ENV php_conf_d /etc/php7/conf.d
+
 # 备份原始文件
 # 修改为国内镜像源
-RUN echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories && \
-    echo "http://mirrors.aliyun.com/alpine/v3.7/community/" >> /etc/apk/repositories && \
+RUN echo "https://mirrors.aliyun.com/alpine/v3.8/main/" > /etc/apk/repositories && \
+    echo "https://mirrors.aliyun.com/alpine/v3.8/community/" >> /etc/apk/repositories && \
     apk update && \
-    apk add --no-cache \
-    tzdata \
-    wget \
-    curl \
-    libcurl \
-    python \
-    python-dev \
-    py-pip \
-    augeas-dev \
-    ca-certificates \
-    dialog \
-    autoconf \
-    make \
-    gcc \
-    musl-dev \
-    linux-headers \
-    libpng-dev \
-    icu-dev \
-    libpq \
-    libxslt-dev \
-    libffi-dev \
-    freetype-dev \
-    gettext-dev \
-    postgresql-dev \
-    libjpeg-turbo-dev && \
-    docker-php-ext-configure gd \
-    --with-gd \
-    --with-freetype-dir=/usr/include/ \
-    --with-png-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-install iconv pdo_mysql pdo_pgsql gd exif intl xsl soap zip opcache bcmath && \
-    docker-php-source delete && \
-    apk add libmemcached-libs libmemcached-dev zlib-dev \
-    && pecl install igbinary \
-    && echo 'extension=igbinary.so' >> /usr/local/etc/php/conf.d/docker-php-ext-igbinary.ini \
-    && pecl install msgpack \
-    && echo 'extension=msgpack.so' >> /usr/local/etc/php/conf.d/docker-php-ext-msgpack.ini \
-    && pecl install memcached \
-    && echo 'extension=memcached.so' >> /usr/local/etc/php/conf.d/docker-php-ext-memcached.ini \
-    && apk add rabbitmq-c-dev \
-    && pecl install amqp \
-    && echo 'extension=amqp.so' >> /usr/local/etc/php/conf.d/docker-php-ext-amqp.ini \
-    # extensions install
-    && pecl install redis && \
-    echo '[redis]' >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini && \
-    echo 'extension=redis.so' >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini && \
-    echo 'opcache.validate_timestamps=0' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
-    echo 'opcache.enable=1' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
-    echo 'opcache.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    apk add php7 php7-mbstring php7-exif php7-ftp php7-intl php7-session && \
+    apk add php7-xml php7-soap php7-sodium php7-xsl php7-zlib && \
+    apk add php7-json php7-phar php7-gd php7-iconv php7-openssl php7-dom php7-pdo php7-curl && \
+    apk add php7-xmlwriter php7-xmlreader php7-ctype php7-simplexml php7-zip php7-posix && \
+    apk add php7-dev php7-pear php7-tokenizer php7-bcmath php7-mongodb php7-apcu php7-fileinfo php7-gmp && \
+    apk add php7-redis php7-opcache php7-amqp php7-memcached && \
+    apk add php7-pdo_mysql php7-pdo_pgsql && \
+    apk add autoconf make cmake gcc g++ tzdata && \
+    echo "config opcache" && \
+    echo 'opcache.validate_timestamps=0' >> ${php_conf_d}/00_opcache.ini && \
+    echo 'opcache.enable=1' >> ${php_conf_d}/00_opcache.ini && \
+    echo 'opcache.enable_cli=1' >> ${php_conf_d}/00_opcache.ini && \
+    echo "config apcu" && \
+    echo 'apc.enabled=1' >> ${php_conf_d}/apcu.ini && \
+    echo 'apc.shm_size=32M' >> ${php_conf_d}/apcu.ini && \
+    echo 'apc.enable_cli=1' >> ${php_conf_d}/apcu.ini && \
     pecl install yaf && \
-    echo '[yaf]' >> /usr/local/etc/php/conf.d/docker-php-ext-yaf.ini && \
-    echo 'extension=yaf.so' >> /usr/local/etc/php/conf.d/docker-php-ext-yaf.ini && \
-    echo 'yaf.cache_config=1' >> /usr/local/etc/php/conf.d/docker-php-ext-yaf.ini && \
-    echo 'yaf.use_namespace=1' >> /usr/local/etc/php/conf.d/docker-php-ext-yaf.ini && \
-    echo 'yaf.use_spl_autoload=1' >> /usr/local/etc/php/conf.d/docker-php-ext-yaf.ini && \
-    pecl install mongodb && \
-    echo '[mongodb]' >> /usr/local/etc/php/conf.d/docker-php-ext-mongodb.ini && \
-    echo 'extension=mongodb.so' >> /usr/local/etc/php/conf.d/docker-php-ext-mongodb.ini && \
-    pecl install apcu && \
-    echo '[apcu]' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini && \
-    echo 'extension=apcu.so' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini && \
-    echo 'apc.enabled=1' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini && \
-    echo 'apc.shm_size=32M' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini && \
-    echo 'apc.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini && \
+    echo "config yaf" && \
+    echo '[yaf]' >> ${php_conf_d}/yaf.ini && \
+    echo 'extension=yaf.so' >> ${php_conf_d}/yaf.ini && \
+    echo 'yaf.cache_config=1' >> ${php_conf_d}/yaf.ini && \
+    echo 'yaf.use_namespace=1' >> ${php_conf_d}/yaf.ini && \
+    echo 'yaf.use_spl_autoload=1' >> ${php_conf_d}/yaf.ini && \
     # remove useless
-    apk del \
-    dpkg-dev dpkg \
-    file \
-    g++ \
-    gcc \
-    libc-dev \
-    make \
-    pkgconf \
-    re2c
+    apk del php7-dev gcc autoconf make cmake g++
 
 #设置时区
 RUN apk add bash \
     && /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo 'Asia/Shanghai' >/etc/timezone
 
+
 COPY ./scripts/ /extra/
 COPY ./monitor/ /extra/monitor/
+
+#安装supervisord
+COPY --from=ochinchina/supervisord:latest /usr/local/bin/supervisord /usr/local/bin/supervisord
+COPY supervisor.conf /supervisor.conf
 
 WORKDIR ${APP_PATH}
 
